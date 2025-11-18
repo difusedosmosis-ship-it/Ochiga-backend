@@ -1,12 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Router } from "express";
+import { authService } from "./auth.service";
 
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+const router = Router();
 
-  @Post('login')
-  async login(@Body() body: { usernameOrEmail: string; password: string }) {
-    return this.authService.login(body);
+router.post("/login", async (req, res) => {
+  const { usernameOrEmail, password } = req.body;
+
+  try {
+    const result = await authService.login({ usernameOrEmail, password });
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(400).json({ error: err.message });
   }
-}
+});
+
+export default router;
