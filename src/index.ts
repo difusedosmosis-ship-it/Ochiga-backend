@@ -1,18 +1,17 @@
 import app from "./app";
-import { PORT } from "./config/env";
+import { PORT, logPortBinding } from "./config/env";
 
-const DEFAULT_PORT = 5000;
-
-const port = PORT || DEFAULT_PORT;
-
-const server = app.listen(port, () => {
-  console.log(`Ochiga backend running on http://localhost:${port}`);
+const server = app.listen(PORT, () => {
+  logPortBinding(PORT);
 });
 
 server.on("error", (err: any) => {
   if (err.code === "EADDRINUSE") {
-    console.warn(`Port ${port} is in use, trying a random free port...`);
-    server.listen(0); // 0 tells Node to pick a free port automatically
+    console.warn(`⚠️ Port ${PORT} is in use. Attempting to bind to a random free port...`);
+    server.listen(0, () => {
+      const actualPort = (server.address() as any).port;
+      logPortBinding(actualPort);
+    });
   } else {
     console.error(err);
   }
