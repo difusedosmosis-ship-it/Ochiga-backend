@@ -11,7 +11,6 @@ import residentsRoutes from "./routes/residents";
 import devicesRoutes from "./routes/devices";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
 // ─── Middleware ───────────────────────────────
 app.use(helmet()); // Security headers
@@ -43,11 +42,6 @@ app.use((req, res) => {
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ status: "error", message: "Internal Server Error", error: err.message });
-});
-
-// ─── Start Server ────────────────────────────
-app.listen(PORT, () => {
-  console.log(`Ochiga backend running on http://localhost:${PORT}`);
 });
 
 export default app;
