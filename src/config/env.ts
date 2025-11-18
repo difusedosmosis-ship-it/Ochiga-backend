@@ -10,14 +10,20 @@ function requireEnv(name: string): string {
   return value;
 }
 
-export const PORT = process.env.PORT || 4000;
+// Use PORT from environment, fallback to 5000
+export const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 
+// Supabase
 export const SUPABASE_URL = requireEnv("SUPABASE_URL");
 export const SUPABASE_ANON_KEY = requireEnv("SUPABASE_ANON_KEY");
 export const SUPABASE_SERVICE_ROLE_KEY = requireEnv("SUPABASE_SERVICE_ROLE_KEY");
 
-/**
- * ❗ IMPORTANT:
- * No fallback secret — JWT MUST use a real secret.
- */
+// JWT secret
 export const APP_JWT_SECRET = requireEnv("APP_JWT_SECRET");
+
+/**
+ * Utility to log which port the app actually binds to
+ */
+export function logPortBinding(actualPort: number) {
+  console.log(`✅ Ochiga backend is listening on http://localhost:${actualPort}`);
+}
