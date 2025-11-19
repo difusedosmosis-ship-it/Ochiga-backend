@@ -1,10 +1,12 @@
 import app from "./app";
 import { PORT, logPortBinding } from "./config/env";
 
-// 👉 ADD THIS IMPORT
+// 👉 IMPORT ROUTES
+import homeRoutes from "./routes/home";
 import onboardingRoutes from "./routes/onboarding";
 
-// 👉 REGISTER ROUTE BEFORE SERVER STARTS
+// 👉 REGISTER ROUTES BEFORE SERVER STARTS
+app.use("/estate", homeRoutes);
 app.use("/auth/onboard", onboardingRoutes);
 
 const server = app.listen(PORT, () => {
