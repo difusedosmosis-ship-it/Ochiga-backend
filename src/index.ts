@@ -2,17 +2,19 @@ import app from "./app";
 import { PORT, logPortBinding } from "./config/env";
 
 // 👉 IMPORT ROUTES
-import estatesRoutes from "./routes/estates";
+import homeRoutes from "./routes/home";
 import onboardingRoutes from "./routes/onboarding";
 
 // 👉 REGISTER ROUTES BEFORE SERVER STARTS
-app.use("/api/estate", estatesRoutes);       // ✅ matches frontend /api/estate/create-home
-app.use("/auth/onboard", onboardingRoutes);  // existing onboarding routes
+app.use("/api/estate", homeRoutes);           // <- mounted at /api/estate
+app.use("/auth/onboard", onboardingRoutes);   // onboarding route
 
+// 👉 START SERVER
 const server = app.listen(PORT, () => {
   logPortBinding(PORT);
 });
 
+// 👉 HANDLE PORT CONFLICTS
 server.on("error", (err: any) => {
   if (err.code === "EADDRINUSE") {
     console.warn(`⚠️ Port ${PORT} is in use. Attempting to bind to a random free port...`);
