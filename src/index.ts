@@ -1,6 +1,12 @@
 import app from "./app";
 import { PORT, logPortBinding } from "./config/env";
 
+// 👉 ADD THIS IMPORT
+import onboardingRoutes from "./routes/onboarding";
+
+// 👉 REGISTER ROUTE BEFORE SERVER STARTS
+app.use("/auth/onboard", onboardingRoutes);
+
 const server = app.listen(PORT, () => {
   logPortBinding(PORT);
 });
