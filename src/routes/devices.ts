@@ -135,7 +135,7 @@ async function mqttDiscover(timeout = 3000) {
 ------------------------------------------------------- */
 router.get("/discover", requireAuth, async (req, res) => {
   try {
-    console.log("🔍 Starting Discovery Scan...");
+    console.log("🔍 [DEVICE SCAN] Scan button triggered from frontend!");
 
     // 1. SSDP SCAN
     const ssdp = await ssdpDiscover();
@@ -148,13 +148,21 @@ router.get("/discover", requireAuth, async (req, res) => {
 
     const all = [...ssdp, ...mqttResults, ...pingResults];
 
-    if (!all.length) {
+    if (all.length === 0) {
+      console.log("🔍 [DEVICE SCAN] No devices found.");
       return res.status(404).json({ message: "No devices found" });
     }
 
+    console.log(`🔍 [DEVICE SCAN] ${all.length} device(s) discovered:`);
+    all.forEach((d) =>
+      console.log(
+        `- ${d.name} (${d.type || d.protocol}) at ${d.ip} [${d.protocol}]`
+      )
+    );
+
     return res.json({ devices: all });
   } catch (err: any) {
-    console.error("Device discovery error:", err);
+    console.error("[DEVICE SCAN] Discovery error:", err);
     return res
       .status(500)
       .json({ error: "Discovery failed", details: err.message });
@@ -198,6 +206,8 @@ router.post("/connect/:id", requireAuth, async (req, res) => {
     .single();
 
   if (error) return res.status(400).json({ error: error.message });
+
+  console.log(`🔌 [DEVICE CONNECT] Device ${id} connected to estate ${estate_id}`);
 
   return res.json({ message: "Device connected", device: data });
 });
